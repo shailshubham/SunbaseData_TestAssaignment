@@ -1,3 +1,4 @@
+using Newtonsoft.Json;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -23,23 +24,26 @@ public class ClientDatabase : MonoBehaviour
     [System.Serializable]
     public class Client
     {
-        bool isManager;
-        int id;
-        string label;
+        public bool isManager;
+        public int id;
+        public string label;
     }
     [System.Serializable]
     public class ClientInfo
     {
-        string adress;
-        string name;
-        int points;
+        public string address;
+        public string name;
+        public int points;
     }
 
     [System.Serializable]
     public class Data
     {
+        [JsonProperty("1")]
         public ClientInfo _1;
+        [JsonProperty("2")]
         public ClientInfo _2;
+        [JsonProperty("3")]
         public ClientInfo _3;
     }
 
@@ -47,6 +51,20 @@ public class ClientDatabase : MonoBehaviour
     public class ClientList
     {
         public Client[] clients;
-        Data data;
+        public Data data;
+    }
+
+    public ClientInfo GetClientInfo(int id)
+    {
+        switch(id)
+        {
+            case 1:
+                return clientList.data._1;
+            case 2:
+                return clientList.data._2;
+            case 3:
+                return clientList.data._3;
+        }
+        return null;
     }
 }
