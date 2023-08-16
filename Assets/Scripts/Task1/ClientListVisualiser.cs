@@ -7,14 +7,35 @@ using TMPro.EditorUtilities;
 
 public class ClientListVisualiser : MonoBehaviour
 {
+    public static ClientListVisualiser instance;
+    private void Awake()
+    {
+        if(instance == null)
+        {
+            instance = this;
+        }
+        else if(instance!= this)
+        {
+            Destroy(gameObject);
+        }
+    }
     [SerializeField] GameObject contentItemUIPrefeb;
     [SerializeField] GameObject contentItemParent;
     List<ContentItemUI> contentItemUiList = new List<ContentItemUI>();
     [SerializeField] TMP_Dropdown dropdown;
+
+    [Header("Client Info Properties")]
+    [SerializeField] GameObject infoUI;
+    public TextMeshProUGUI Label;
+    public int selectedID;
+    [SerializeField] TextMeshProUGUI Name;
+    [SerializeField] TextMeshProUGUI Points;
+    [SerializeField] TextMeshProUGUI Adress;
     // Start is called before the first frame update
     void Start()
     {
         dropdown.value = 0;
+        infoUI.SetActive(false);
         ClientDatabase.instance.onDataDownloaded += ShowUI;
     }
     private void OnDestroy()
@@ -73,5 +94,14 @@ public class ClientListVisualiser : MonoBehaviour
                 }
             }
         }
+    }
+
+    public void ShowInfo()
+    {
+        ClientDatabase.ClientInfo clientInfo = ClientDatabase.instance.GetClientInfo(selectedID);
+        Name.text = "Name: "+ clientInfo.name;
+        Points.text = "Points: "+clientInfo.points.ToString();
+        Adress.text = "Adress: "+clientInfo.address;
+        infoUI.SetActive(true);
     }
 }
